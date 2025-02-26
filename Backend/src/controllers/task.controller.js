@@ -9,7 +9,7 @@ const createNewTask = AsyncHandler(async (req, res) => {
   if(name === "" || name === null){
     throw new ApiError(400,"Task Name Field is Required!",{});
   }
-  
+
   const newTask = await Task.create({
     name,
     description,
@@ -32,4 +32,18 @@ const getAllTask = AsyncHandler(async (req,res)=>{
     .json(new ApiResponse(200, "All Tasks Fetched!", tasks));
 });
 
-export { createNewTask,getAllTask };
+const getTask = AsyncHandler(async(req,res)=>{
+  const {taskId} = req.params;  
+
+  if(!taskId){
+    throw new ApiError(400,"Task Id missing!",{});
+  };
+
+  const task = await Task.findById(taskId);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Task Fetched!", task));
+});
+
+export { createNewTask,getAllTask,getTask };
