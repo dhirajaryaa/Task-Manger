@@ -16,3 +16,9 @@ app.use(cors({
     methods: process.env.ALLOWED_METHODS
 }));
 
+
+// routes setup 
+import { taskRouter } from './routes/task.route.js';
+
+app.use("/api/v1/tasks",taskRouter);
+
