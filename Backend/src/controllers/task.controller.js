@@ -68,4 +68,16 @@ const updateTask = AsyncHandler(async (req, res) => {
   .json(new ApiResponse(200, "Task Updated", updateTask));
 });
 
-export { createNewTask, getAllTask, getTask ,updateTask};
+const removeTask = AsyncHandler(async (req, res) => {
+  const { taskId } = req.params;
+
+  if (!taskId) {
+    throw new ApiError(400, "Task Id missing!", {});
+  }
+
+  const task = await Task.findByIdAndDelete(taskId);
+
+  return res.status(200).json(new ApiResponse(200, "Task Removed Successfully", task));
+});
+
+export { createNewTask, getAllTask, getTask ,updateTask,removeTask};
