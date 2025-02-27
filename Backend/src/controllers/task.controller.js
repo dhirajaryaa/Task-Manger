@@ -80,6 +80,40 @@ const removeTask = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Task Removed Successfully", task));
 });
 
+const updateTaskDueDate = AsyncHandler(async (req, res) => {
+  const { taskId } = req.params;
+  const { dueDate } = req.body;
+
+  if (!taskId) {
+    throw new ApiError(400, "Task Id missing!", {});
+  }
+  if (!dueDate) {
+    throw new ApiError(400, "Due Date is missing", {});
+  }
+
+  const task = await Task.findById(taskId);
+
+  if (!task) {
+    throw new ApiError(404, "Task not Found!", {});
+  }
+
+  // function to convert iso string
+  const convertIsoString = function (date) {
+    const [day, month, year] = date.split("-"); // Split the date
+    const isoDate = new Date(
+      `${year}-${month}-${day}T00:00:00.000Z`
+    ).toISOString();
+    return isoDate;
+  };
+
+  task.dueDate = convertIsoString(dueDate) || new Date().now();
+  await task.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Task due date updated successfully"));
+});
+
 const markTaskCompleted = AsyncHandler(async (req, res) => {
   const { taskId } = req.params;
 
@@ -121,4 +155,13 @@ const markTaskFavorite = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Task Marked as Favorite succuss"));
 });
 
-export { createNewTask, getAllTask, getTask, updateTask, removeTask,markTaskCompleted,markTaskFavorite };
+export {
+  createNewTask,
+  getAllTask,
+  getTask,
+  updateTask,
+  removeTask,
+  markTaskCompleted,
+  markTaskFavorite,
+  updateTaskDueDate,
+};
