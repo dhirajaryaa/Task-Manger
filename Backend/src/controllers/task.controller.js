@@ -63,9 +63,7 @@ const updateTask = AsyncHandler(async (req, res) => {
     isFavorite: isFavorite || taskIdVerified.isFavorite,
   });
 
-  return res
-  .status(200)
-  .json(new ApiResponse(200, "Task Updated", updateTask));
+  return res.status(200).json(new ApiResponse(200, "Task Updated", updateTask));
 });
 
 const removeTask = AsyncHandler(async (req, res) => {
@@ -77,7 +75,50 @@ const removeTask = AsyncHandler(async (req, res) => {
 
   const task = await Task.findByIdAndDelete(taskId);
 
-  return res.status(200).json(new ApiResponse(200, "Task Removed Successfully", task));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Task Removed Successfully", task));
 });
 
-export { createNewTask, getAllTask, getTask ,updateTask,removeTask};
+const markTaskCompleted = AsyncHandler(async (req, res) => {
+  const { taskId } = req.params;
+
+  if (!taskId) {
+    throw new ApiError(400, "Task Id missing!", {});
+  }
+
+  const task = await Task.findById(taskId);
+
+  if (!task) {
+    throw new ApiError(404, "Task not Found!", {});
+  }
+
+  task.isCompleted = !task.isCompleted;
+  await task.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Task Marked as Completed succuss"));
+});
+const markTaskFavorite = AsyncHandler(async (req, res) => {
+  const { taskId } = req.params;
+
+  if (!taskId) {
+    throw new ApiError(400, "Task Id missing!", {});
+  }
+
+  const task = await Task.findById(taskId);
+
+  if (!task) {
+    throw new ApiError(404, "Task not Found!", {});
+  }
+
+  task.isFavorite = !task.isFavorite;
+  await task.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Task Marked as Favorite succuss"));
+});
+
+export { createNewTask, getAllTask, getTask, updateTask, removeTask,markTaskCompleted,markTaskFavorite };
