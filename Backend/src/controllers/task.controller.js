@@ -155,6 +155,35 @@ const markTaskFavorite = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Task Marked as Favorite succuss"));
 });
 
+// mongodb aggregate function use
+const getTaskStats = AsyncHandler(async (req, res) => {
+  const [stats] = await Task.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalTasks: { $sum: 1 },
+        completedTask: { $sum: { $cond: ["$isCompleted", 1, 0] } },
+        pendingTask: { $sum: { $cond: ["$isCompleted", 0, 1] } },
+        favoriteTask: { $sum: { $cond: ["$isFavorite", 1, 0] } },
+      },
+    },
+  ]);
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      "Successfully fetched Task Stats :)",
+      stats || {
+        _id: null,
+        totalTasks: 0,
+        completedTask: 0,
+        pendingTask: 0,
+        favoriteTask: 0,
+      }
+    )
+  );
+});
+
 export {
   createNewTask,
   getAllTask,
@@ -164,4 +193,5 @@ export {
   markTaskCompleted,
   markTaskFavorite,
   updateTaskDueDate,
+  getTaskStats
 };
