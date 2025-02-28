@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./components/Header";
 import AddTask from "./components/AddTask";
 import { Route, Routes } from "react-router";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Header />
         {/* add task from  */}
         <Routes>
+          <Route path="/" element={<Dashboard />} />
           <Route path="/create" element={<AddTask />} />
         </Routes>
       </div>
