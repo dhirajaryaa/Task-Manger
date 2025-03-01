@@ -2,20 +2,9 @@ import { useState } from "react";
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { MdStarBorder, MdStar } from "react-icons/md";
 
-function Task() {
-  const [checked, setChecked] = useState(false);
-  const [favorite, setFavorite] = useState(false);
-  const task = {
-    _id: "67bf232c7ddc02d519121f7a",
-    name: "React v19 Learn",
-    description: "this is simple react v 19 learn",
-    dueDate: "2025-01-01T00:00:00.000Z",
-    isCompleted: true,
-    isFavorite: true,
-    createdAt: "2025-02-26T14:20:28.894Z",
-    updatedAt: "2025-02-27T02:08:54.053Z",
-    __v: 0,
-  };
+function Task({ task }) {
+  const [checked, setChecked] = useState(task.isCompleted || false);
+  const [favorite, setFavorite] = useState(task.isFavorite || false);
 
   return (
     <article className="bg-gray-800 p-3 sm:p-4 flex items-center rounded-xl">
@@ -30,7 +19,7 @@ function Task() {
       {/* title  */}
       <div className="mx-2 sm:mx-5 flex-1">
         <h1 className="font-semibold text-md sm:text-lg truncate block">
-          {task && task.name }
+          {task && task.name}
         </h1>
         <p className="text-xs text-gray-400 truncate block">
           {task && task.description}
