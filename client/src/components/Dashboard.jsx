@@ -1,8 +1,8 @@
-import { useState } from "react";
 import Task from "./Task";
+import useTaskStore from "../store/taskStore";
 
 function Dashboard() {
-  const [tasks, setTasks] = useState("");
+  const {tasks} = useTaskStore();
 
   return (
     <div className="w-full text-lg p-5">
